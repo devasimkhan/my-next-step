@@ -1,5 +1,6 @@
 import express from "express"
 import dotenv from "dotenv"
+import colors from "colors"
 import connectDB from "./config/dbConfig.js"
 
 dotenv.config()
@@ -10,9 +11,17 @@ const PORT = process.env.PORT || 3000
 const app = express()
 connectDB()
 
+app.use(express.json())
+app.use(express.urlencoded())
 
 
-app.listen(PORT , () => console.log(`SERVER RUNNING AT PORT ,${PORT}`) )
+app.get("/" , (req , res) => {
+    res.status(200).json({
+        message : "WELCOME TO NEXT-STEP API's "
+    })
+})
+
+app.listen(PORT , () => console.log(`SERVER RUNNING AT PORT ,${PORT}`.bgBlue) )
 
 
 
