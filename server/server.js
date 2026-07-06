@@ -1,9 +1,10 @@
 import express from "express"
 import dotenv from "dotenv"
+dotenv.config()
 import colors from "colors"
 import connectDB from "./config/dbConfig.js"
+import authRoutes from "./routes/authRoutes.js"
 
-dotenv.config()
 
 
 const PORT = process.env.PORT || 3000
@@ -20,6 +21,7 @@ app.get("/" , (req , res) => {
         message : "WELCOME TO NEXT-STEP API's "
     })
 })
+app.use("/api/auth" , authRoutes)
 
 app.listen(PORT , () => console.log(`SERVER RUNNING AT PORT ,${PORT}`.bgBlue) )
 
