@@ -10,7 +10,7 @@ const router = express.Router()
 
 router.post("/register" , authControllers.registerUser)
 router.post("/login" ,authControllers.loginUser )
-router.post("/private" , protect, authControllers.privateController)
+router.post("/private" , protect.forUser, authControllers.privateController)
 
 
 export default router

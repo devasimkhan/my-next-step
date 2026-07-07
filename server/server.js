@@ -5,7 +5,7 @@ import colors from "colors"
 import connectDB from "./config/dbConfig.js"
 import authRoutes from "./routes/authRoutes.js"
 import errorHandler from "./middleware/errorhandler.js"
-
+import adminRoutes from "./routes/adminRoutes.js"
 
 
 const PORT = process.env.PORT || 3000
@@ -22,9 +22,11 @@ app.get("/" , (req , res) => {
         message : "WELCOME TO NEXT-STEP API's "
     })
 })
+// Auth Routes
 app.use("/api/auth" , authRoutes)
 
-
+// admin Routes
+app.use("/api/admin" , adminRoutes)
 
 
 app.use(errorHandler)
