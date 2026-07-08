@@ -2,9 +2,8 @@ import mongoose from "mongoose";
 
 
 const careerSchema = new mongoose.Schema({
-
 category :{
-   type : mongoose.Schema.ObjectId ,
+    type : mongoose.Schema.Types.ObjectId ,
    ref : "Category" ,
    required : true
 } ,
@@ -13,28 +12,27 @@ title :{
      required : [true , "Please Enter Title"]
 } ,
 description :{
-    type : true ,
+    type : String ,
     required : [true , "Please Enter Description"] 
 } ,
 requiredQualification :{
- type : true ,
-    required : [true , "Please Enter Required Qualification"] 
-
-
+ type : String ,
+required : [true , "Please Enter Required Qualification"] 
 } ,
 duration :{
-     type : true ,
-    required : [true , "Please Enter Description"] 
+     type : String ,
+    required : [true , "Please Enter Duration"] 
 } ,
 salary :{
-     type : true ,
-    required : [true , "Please Enter Description"] 
+     type : String ,
+    required : [true , "Please Enter Salary"] 
 }
  
 },
 {
     timestamps:true
 })
+
 
 const Career = mongoose.model("Career" , careerSchema)
 
