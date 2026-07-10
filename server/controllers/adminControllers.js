@@ -1,5 +1,6 @@
 import Career from "../models/careerModel.js";
 import Category from "../models/categoryModel.js";
+import Counselor from "../models/counselorModel.js";
 import User from "../models/userModels.js";
 
 const getAllUser = async (req, res) => {
@@ -85,18 +86,31 @@ const getAllCareer = async(req , res) => {
 
 const getCareerByCategoryId = async(req , res) => {
 
-  const { cid } = req.params;
+  // const { cid } = req.params;
+      const categoryId = req.params.cid 
 
     const careers = await Career.find({
-      category: cid,
+      category: categoryId,
     })
 
-    if (careers.length === 0) {
+    if (careers.length === 0) {      
       res.status(404);
       throw new Error("No Career Found");
     }
 
     res.status(200).json(careers);
+}
+
+const getAllCounselor = async(req, res) => {
+
+  const allCounselor = await Counselor.find()
+  if(!allCounselor){
+    res.status(404)
+    throw new Error("Counselor Not found");
+   
+  }
+  res.status(200).json(allCounselor)
+
 }
 
 
@@ -107,7 +121,8 @@ const adminControllers = {
   getAllCategory,
   createCareer ,
   getAllCareer ,
- getCareerByCategoryId
+ getCareerByCategoryId ,
+ getAllCounselor
 
 };
 

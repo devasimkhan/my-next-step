@@ -3,7 +3,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
 
 const registerUser = async (req, res) => {
-  const { name, email, phone, password, qualification, location } = req.body;
+  const { name, email, phone, password, qualification, location  } = req.body;
 
   if (!name || !email || !phone || !password || !qualification || !location) {
     res.status(409);
