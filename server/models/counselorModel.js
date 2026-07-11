@@ -25,6 +25,11 @@ isAvailable :{
     type : Boolean ,
     default : true ,
     required : true 
+},
+status :{
+  type : String ,
+  enum  :["accepted" , "pending" , "rejected"] ,
+   default : "pending"
 }
 
 },{

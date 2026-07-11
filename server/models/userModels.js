@@ -44,6 +44,11 @@ const userSchema = new mongoose.Schema(
       default: 5,
       required: true,
     },
+  profilePic :{
+    type:String ,
+    required : true
+  }
+
   },
   {
     timestamps: true,

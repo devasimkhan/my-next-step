@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 const registerUser = async (req, res) => {
   const { name, email, phone, password, qualification, location  } = req.body;
-
+ console.log(req.body)
   if (!name || !email || !phone || !password || !qualification || !location) {
     res.status(409);
     throw new Error("Please Enter All Details....");
@@ -14,6 +14,7 @@ const registerUser = async (req, res) => {
     res.status(409);
     throw new Error("Please Enter Valid Number");
   }
+
 
   let emailExit = await User.findOne({ email: email });
   let phoneExit = await User.findOne({ phone: phone });
@@ -26,9 +27,10 @@ const registerUser = async (req, res) => {
   const salt = bcrypt.genSaltSync(10);
 const hashedPassword = bcrypt.hashSync( password, salt);
 
+  console.log(req.file)
 
   const user = await User.create({
-    name , email , phone , password: hashedPassword , qualification , location , 
+    name , email , phone , password: hashedPassword , qualification , location , profilePic :req.body.path 
   })
   if(!user){
     res.status(409)
@@ -46,7 +48,8 @@ const hashedPassword = bcrypt.hashSync( password, salt);
     isActive : user.isActive ,
     credits : user.credits ,
     userSince : user.createdAt ,
-    token : generateToken(user._id)
+    token : generateToken(user._id) ,
+    profilePic : user.profilePic
   })
 
 };

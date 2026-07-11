@@ -40,90 +40,107 @@ const getAllCategory = async (req, res) => {
   res.status(200).json(allCategory);
 };
 
-
-
 const createCareer = async (req, res) => {
+  const { title, description, requiredQualification, duration, salary } =
+    req.body;
 
-    const {title , description , requiredQualification , duration , salary} = req.body
+  if (
+    !title ||
+    !description ||
+    !requiredQualification ||
+    !duration ||
+    !salary
+  ) {
+    res.status(409);
+    throw new Error("Please Enter All Details!");
+  }
+  const categoryId = req.params.cid;
 
-    if(!title || !description || !requiredQualification || !duration  || !salary){
-        res.status(409)
-        throw new Error("Please Enter All Details!");
-        
-    }
-      const categoryId = req.params.cid 
+  const career = await Career.create({
+    category: categoryId,
+    title,
+    description,
+    requiredQualification,
+    salary,
+    duration,
+  });
+  if (!career) {
+    res.status(409);
+    throw new Error("Career Not Create");
+  }
 
-    
-    const career = await Career.create({
-         category : categoryId    ,
-        title ,
-        description ,
-        requiredQualification ,
-        salary ,
-        duration ,
-    })
-    if(!career){
-        res.status(409)
-        throw new Error("Career Not Create")
-    }
+  res.status(201).json(career);
+};
 
-    res.status(201).json(career)
-
-
-}
-
-const getAllCareer = async(req , res) => {
-
-  const allCareers = await Career.find().populate('category')
-  if(!allCareers){
-    res.status(404)
+const getAllCareer = async (req, res) => {
+  const allCareers = await Career.find().populate("category");
+  if (!allCareers) {
+    res.status(404);
     throw new Error("Career Not Found");
-    
   }
-  res.status(200).json(allCareers)
+  res.status(200).json(allCareers);
+};
 
-}
-
-const getCareerByCategoryId = async(req , res) => {
-
+const getCareerByCategoryId = async (req, res) => {
   // const { cid } = req.params;
-      const categoryId = req.params.cid 
+  const categoryId = req.params.cid;
 
-    const careers = await Career.find({
-      category: categoryId,
-    })
+  const careers = await Career.find({
+    category: categoryId,
+  });
 
-    if (careers.length === 0) {      
-      res.status(404);
-      throw new Error("No Career Found");
-    }
-
-    res.status(200).json(careers);
-}
-
-const getAllCounselor = async(req, res) => {
-
-  const allCounselor = await Counselor.find().populate('category').populate('user')
-  if(!allCounselor){
-    res.status(404)
-    throw new Error("Counselor Not found");
-   
+  if (careers.length === 0) {
+    res.status(404);
+    throw new Error("No Career Found");
   }
-  res.status(200).json(allCounselor)
 
-}
+  res.status(200).json(careers);
+};
 
+const getAllCounselor = async (req, res) => {
+  const allCounselor = await Counselor.find();
+  if (!allCounselor) {
+    res.status(404);
+    throw new Error("Counselor Not found");
+  }
+  res.status(200).json(allCounselor);
+};
 
+const UpdateCounselor = async (req, res) => {
+  let counselorId = req.params.cnid;
+  const counselor = await Counselor.findById(counselorId);
+  if (!counselor) {
+    res.status(409);
+    throw new Error("Counselor Not Found");
+  }
+
+  const UpdatedCounselor = await Counselor.findByIdAndUpdate(
+    counselor._id,
+    req.body,
+    { new: true },
+  )
+    .populate("user")
+    .populate("category");
+
+  if (req.body.status === "accepted") {
+    const updateUser = await User.findByIdAndUpdate(
+      counselor.user,
+      { userType: "COUNSELOR" },
+      { new: true },
+    );
+  }
+  res.status(200).json(UpdatedCounselor);
+};
 
 const adminControllers = {
   getAllUser,
   createCategory,
   getAllCategory,
-  createCareer ,
-  getAllCareer ,
- getCareerByCategoryId ,
- getAllCounselor
-
+  createCareer,
+  getAllCareer,
+  getCareerByCategoryId,
+  getAllCounselor,
+  UpdateCounselor,
 };
 
 export default adminControllers;
