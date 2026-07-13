@@ -4,6 +4,7 @@ import Counselor from "../models/counselorModel.js";
 const becomeACounselor = async(req, res) => {
 
  let userId = req.user.id
+ 
     const { category ,  experience  }  = req.body 
 
   if(!category || !experience) {

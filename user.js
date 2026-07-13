@@ -158,7 +158,7 @@ const users = [
 const importData = async () => {
   try {
     // Delete old users
-    await User.deleteMany({});
+    await User.deleteMany({userType : "COUNSELOR"});
 
     // Hash passwords
     const hashedUsers = await Promise.all(
