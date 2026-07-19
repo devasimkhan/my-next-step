@@ -99,7 +99,7 @@ const getCareerByCategoryId = async (req, res) => {
 };
 
 const getAllCounselor = async (req, res) => {
-  const allCounselor = await Counselor.find();
+  const allCounselor = await Counselor.find().populate("user");
   if (!allCounselor) {
     res.status(404);
     throw new Error("Counselor Not found");
@@ -133,60 +133,53 @@ const UpdateCounselor = async (req, res) => {
   res.status(200).json(UpdatedCounselor);
 };
 
-
-const getAllCreditsRequest = async(req, res) => {
-
-
-  const creditRequest = await Credit.find().populate("user")
-  if(!creditRequest){
-    res.status(404)
+const getAllCreditsRequest = async (req, res) => {
+  const creditRequest = await Credit.find().populate("user");
+  if (!creditRequest) {
+    res.status(404);
     throw new Error("Credit Request Not Found");
-    
   }
-  
-  res.status(200).json(creditRequest)
 
+  res.status(200).json(creditRequest);
+};
 
-}
+const updatedCreditRequest = async (req, res) => {
+  const { status } = req.body;
 
-const updatedCreditRequest = async(req , res) =>{
-  
-  const {status} = req.body
+  if (!status) {
+    res.status(409);
+    throw new Error("Please Enter Status");
+  }
 
-if(!status){
-  res.status(409)
-  throw new Error("Please Enter Status");
-  
-}
+  const creditRequest = await Credit.findById(req.params.rid);
 
-  const creditRequest = await  Credit.findById(req.params.rid)
+  if (!creditRequest) {
+    res.status(404);
+    throw new Error("Request Not Found");
+  }
 
-if(!creditRequest){
-  res.status(404)
-  throw new Error("Request Not Found");
-  
-}
-  
+  const user = await User.findById(creditRequest.user);
 
-const user = await User.findById(creditRequest.user )
+  if (!user) {
+    res.status(404);
+    throw new Error("User Not Found");
+  }
 
-if(!user){
-  res.status(404)
-  throw new Error("User Not Found");
-  
-}
+  const updatedUser = await User.findByIdAndUpdate(
+  user._id,
+  {
+    credits: user.credits + creditRequest.credits,
+  },
+  { new: true }
+);
 
-const updateUser = await User.findByIdAndUpdate(user._id , req.body , {credits : user.credits + creditRequest.credits } , {new : true})
-
-
-    const updatedCreditRequest = await Credit.findByIdAndUpdate(creditRequest._id, { status }, { new: true })
-res.status(200).json(updatedCreditRequest)
-
-}
-
-
-
-
+  const updatedCreditRequest = await Credit.findByIdAndUpdate(
+    creditRequest._id,
+    { status },
+    { new: true },
+  );
+  res.status(200).json(updatedCreditRequest);
+};
 
 const adminControllers = {
   getAllUser,
@@ -196,9 +189,9 @@ const adminControllers = {
   getAllCareer,
   getCareerByCategoryId,
   getAllCounselor,
-  UpdateCounselor, 
-   getAllCreditsRequest ,
-    updatedCreditRequest
+  UpdateCounselor,
+  getAllCreditsRequest,
+  updatedCreditRequest,
 };
 
 export default adminControllers;

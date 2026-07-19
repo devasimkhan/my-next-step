@@ -46,9 +46,9 @@ res.status(201).json(newRating)
 const getRating = async(req, res) => {
    
 
-    let {cind} = req.params
+   
 
-    const ratings = await Rating.find().populate("user").populate("counselor")
+    const ratings = await Rating.find(req.params.cind).populate("user").populate("counselor")
 
     if(!ratings){
         res.status(409)
