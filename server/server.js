@@ -9,6 +9,9 @@ import adminRoutes from "./routes/adminRoutes.js"
 import counselorRoutes from "./routes/counselorRoutes.js"
 import ratingRoutes from "./routes/ratingRoutes.js"
 import creditsRoutes from "./routes/creditsRoutes.js"
+import roadmapRoutes from "./routes/roadmapRoutes.js"
+
+
 const PORT = process.env.PORT || 3000
 
 const app = express()
@@ -38,7 +41,10 @@ app.use("/api/rating" , ratingRoutes)
 
 //  credits router 
 app.use("/api/credits" , creditsRoutes)
+//  road map routes
+app.use("/api/ai" , roadmapRoutes)
 
+// error handler
 app.use(errorHandler)
 app.listen(PORT , () => console.log(`SERVER RUNNING AT PORT ,${PORT}`.bgBlue) )
 
