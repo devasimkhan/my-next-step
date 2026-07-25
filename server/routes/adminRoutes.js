@@ -2,6 +2,7 @@
 import express from "express"
 import adminControllers from "../controllers/adminControllers.js"
 import protect from "../middleware/authMiddleware.js"
+import { AdminAiChat } from "../controllers/roadmapControllers.js"
 
 
 
@@ -17,4 +18,5 @@ router.get("/counselors" ,protect.forAdmin , adminControllers.getAllCounselor )
 router.put("/counselors/:cnid"  ,protect.forAdmin, adminControllers.UpdateCounselor)
 router.get("/credits" , protect.forAdmin , adminControllers.getAllCreditsRequest)
 router.put("/credits/:rid" , protect.forAdmin , adminControllers.updatedCreditRequest)
+router.post("/ai" , protect.forAdmin , AdminAiChat)
 export default router

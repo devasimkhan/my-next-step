@@ -1,5 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
 import User from "../models/userModels.js";
+import Career from "../models/careerModel.js";
+import Category from "../models/categoryModel.js";
+import Rating from "../models/ratingModel.js";
+import Credit from "../models/creditsModel.js";
+import Counselor from "../models/counselorModel.js";
 
 export const generateRoadmap = async (req, res) => {
   try {
@@ -113,6 +118,53 @@ One practical, encouraging tip to keep momentum.
     });
   } catch (error) {
     res.status(409);
-    throw new Error("Unable To Generate Roadmap");
+    throw new Error("Unable To Generate Roadmap insuuficeint Credits");
   }
 };
+
+ export const AdminAiChat = async(req,res) =>{
+
+const {question} = req.body 
+if(!question){
+  res.status(409)
+  throw new Error("Question is Not Found");
+  
+}
+
+
+ try {
+  const users = await User.find()
+  const careers = await Career.find()
+const categories = await Category.find()
+const ratings = await Rating.find()
+const credits =  await Credit.find()
+const counselors = await Counselor.find()
+
+
+const dataset = [users , careers , categories , ratings , credits , counselors]
+
+
+const SYSTEM_PROMPT = `You are  smart ai assistant which replies to my question about given data else you respond with no data available . here is data set you need to answer according to that : ${dataset}  here is my question : ${question}`
+
+     const ai = new GoogleGenAI({
+      apiKey: process.env.GEMINI_KEY_API,
+    });
+    const interaction = await ai.interactions.create({
+      model: "gemini-3.5-flash",
+      input: SYSTEM_PROMPT ,
+    });
+    let data = interaction.output_text;
+
+    res.status(200).json({
+      message: "Response Arrived",
+      answer: data,
+    });
+ } catch (error) {
+  console.log(error)
+   res.status(409);
+    throw new Error("Unable To Generate Response");
+  }
+
+ }
+
+

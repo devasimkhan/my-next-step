@@ -10,12 +10,31 @@ import counselorRoutes from "./routes/counselorRoutes.js"
 import ratingRoutes from "./routes/ratingRoutes.js"
 import creditsRoutes from "./routes/creditsRoutes.js"
 import roadmapRoutes from "./routes/roadmapRoutes.js"
-
-
+import http from "http"
+import { Server } from "socket.io"
+import { chatHandler } from "./socket/chatHandel.js"
+import socketAuthMiddleware from "./socket/socketAuth.js"
+import { Socket } from "dgram"
 const PORT = process.env.PORT || 3000
 
 const app = express()
+const server = http.createServer(app)
 connectDB()
+
+const io = new Server (server , {
+   cors :{
+    origin : process.env.CLIENT_URL || "http://localhost:5173" ,
+    credentials : true
+   }
+})
+
+io.use(socketAuthMiddleware)
+
+
+io.on("connection" , (socket) => {
+    console.log(`User connected ;${socket.userId}`) 
+    chatHandler(io , socket)
+})
 
 app.use(express.json())
 app.use(express.urlencoded())
