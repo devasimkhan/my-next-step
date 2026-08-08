@@ -8,9 +8,7 @@ import Counselor from "../models/counselorModel.js";
 
 export const generateRoadmap = async (req, res) => {
   try {
-    const ai = new GoogleGenAI({
-      apiKey: process.env.GEMINI_KEY_API,
-    });
+    // const ai = new GoogleGenAI({});
 
     const user = await User.findById(req.user.id);
     if (!user) {
@@ -122,36 +120,29 @@ One practical, encouraging tip to keep momentum.
   }
 };
 
- export const AdminAiChat = async(req,res) =>{
+export const AdminAiChat = async (req, res) => {
+  const { question } = req.body;
+  if (!question) {
+    res.status(409);
+    throw new Error("Question is Not Found");
+  }
 
-const {question} = req.body 
-if(!question){
-  res.status(409)
-  throw new Error("Question is Not Found");
-  
-}
+  try {
+    const users = await User.find();
+    const careers = await Career.find();
+    const categories = await Category.find();
+    const ratings = await Rating.find();
+    const credits = await Credit.find();
+    const counselors = await Counselor.find();
 
+    const dataset = [users, careers, categories, ratings, credits, counselors];
 
- try {
-  const users = await User.find()
-  const careers = await Career.find()
-const categories = await Category.find()
-const ratings = await Rating.find()
-const credits =  await Credit.find()
-const counselors = await Counselor.find()
+    const SYSTEM_PROMPT = `You are  smart ai assistant which replies to my question about given data else you respond with no data available . here is data set you need to answer according to that : ${dataset}  here is my question : ${question}`;
 
-
-const dataset = [users , careers , categories , ratings , credits , counselors]
-
-
-const SYSTEM_PROMPT = `You are  smart ai assistant which replies to my question about given data else you respond with no data available . here is data set you need to answer according to that : ${dataset}  here is my question : ${question}`
-
-     const ai = new GoogleGenAI({
-      apiKey: process.env.GEMINI_KEY_API,
-    });
+    const ai = new GoogleGenAI({});
     const interaction = await ai.interactions.create({
       model: "gemini-3.5-flash",
-      input: SYSTEM_PROMPT ,
+      input: SYSTEM_PROMPT,
     });
     let data = interaction.output_text;
 
@@ -159,12 +150,9 @@ const SYSTEM_PROMPT = `You are  smart ai assistant which replies to my question 
       message: "Response Arrived",
       answer: data,
     });
- } catch (error) {
-  console.log(error)
-   res.status(409);
+  } catch (error) {
+    console.log(error);
+    res.status(409);
     throw new Error("Unable To Generate Response");
   }
-
- }
-
-
+};

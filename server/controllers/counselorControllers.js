@@ -38,8 +38,25 @@ const becomeACounselor = async (req, res) => {
   });
 };
 
+
+const getActiveCounselors = async(req ,res) => {
+
+  const Counselors = await Counselor.find().populate("user").populate("category")
+
+  if(!Counselors){
+    res.status(404)
+    throw new Error("Counselors is not Found");
+    
+  }
+    const activeCounselor = Counselors.filter(counselor => counselor.status === "accepted")
+
+  res.status(200).json(Counselors)
+  
+}
+
 const counselorControllers = {
   becomeACounselor,
+  getActiveCounselors
 };
 
 export default counselorControllers;

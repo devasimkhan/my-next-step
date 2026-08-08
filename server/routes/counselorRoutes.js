@@ -4,8 +4,8 @@ import protect from "../middleware/authMiddleware.js"
 
 const router = express.Router()
 
-router.get("/counselor" , protect.forUser, counselorControllers.becomeACounselor)
-
+router.post("/counselor" , protect.forUser, counselorControllers.becomeACounselor)
+router.get("/counselor" , counselorControllers.getActiveCounselors)
 
 
 export default router

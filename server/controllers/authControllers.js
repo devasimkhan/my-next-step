@@ -32,7 +32,6 @@ const registerUser = async (req, res) => {
 const hashedPassword = bcrypt.hashSync( password, salt);
 
 let uploadResult = await uploadToCloudinary(req.file.path)
-
 fs.unlinkSync(req.file.path)
   const user = await User.create({
     name , email , phone , password: hashedPassword , qualification , location , profilePic : uploadResult.secure_url

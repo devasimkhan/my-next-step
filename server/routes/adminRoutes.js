@@ -5,7 +5,6 @@ import protect from "../middleware/authMiddleware.js"
 import { AdminAiChat } from "../controllers/roadmapControllers.js"
 
 
-
 const router = express.Router()
 
 router.get("/users" , protect.forAdmin,  adminControllers.getAllUser)
@@ -19,4 +18,5 @@ router.put("/counselors/:cnid"  ,protect.forAdmin, adminControllers.UpdateCounse
 router.get("/credits" , protect.forAdmin , adminControllers.getAllCreditsRequest)
 router.put("/credits/:rid" , protect.forAdmin , adminControllers.updatedCreditRequest)
 router.post("/ai" , protect.forAdmin , AdminAiChat)
+router.get("/roadmaps" , protect.forUser , adminControllers.getAllRoadsMap )
 export default router
