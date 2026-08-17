@@ -11,9 +11,9 @@ const becomeACounselor = async (req, res) => {
     throw new Error("Please Enter All Details.. ");
   }
 
-  let categoryExit = await Category.findById(category);
+  let categoryExit = await Category.findById(category)
 
-  if (!category) {
+  if (!categoryExit) {
     res.status(404);
     throw new Error("Category is Not Found");
   }
@@ -21,6 +21,17 @@ const becomeACounselor = async (req, res) => {
   if (experience < 2) {
     res.status(409);
     throw new Error("Experience Must be 2 OR 2+");
+  }
+
+    const alreadyRequested = await Counselor.findOne({
+    user: userId,
+  });
+
+   if (alreadyRequested) {
+    res.status(409);
+    throw new Error(
+      "You have already submitted a counselor request. Please wait for admin approval."
+    );
   }
 
   const counselor = await Counselor.create({

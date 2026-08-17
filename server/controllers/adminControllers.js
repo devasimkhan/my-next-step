@@ -100,7 +100,7 @@ const getCareerByCategoryId = async (req, res) => {
 };
 
 const getAllCounselor = async (req, res) => {
-  const allCounselor = await Counselor.find().populate("user");
+  const allCounselor = await Counselor.find().populate("user").populate("category");
   if (!allCounselor) {
     res.status(404);
     throw new Error("Counselor Not found");
