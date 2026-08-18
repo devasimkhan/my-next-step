@@ -49,7 +49,7 @@ app.get("/" , (req , res) => {
 app.use("/api/auth" , authRoutes)
 
 // admin Routes
-app.use("/api/admin" , adminRoutes)
+app.use("/api/admin/" , adminRoutes)
 //  Counselor Routes
 
 app.use("/api" , counselorRoutes)

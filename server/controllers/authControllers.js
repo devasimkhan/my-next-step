@@ -71,6 +71,14 @@ if(!email || !password) {
 }
 
 const user = await User.findOne({email:email})
+ 
+if(!user.isActive)
+{
+  res.status(401)
+  throw new Error("Your account has been suspend contact Admin");
+  
+}
+
 
 if(user && bcrypt.compareSync(password, user.password) ){
   res.status(200)

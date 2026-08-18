@@ -100,7 +100,9 @@ const getCareerByCategoryId = async (req, res) => {
 };
 
 const getAllCounselor = async (req, res) => {
-  const allCounselor = await Counselor.find().populate("user").populate("category");
+  const allCounselor = await Counselor.find()
+    .populate("user")
+    .populate("category");
   if (!allCounselor) {
     res.status(404);
     throw new Error("Counselor Not found");
@@ -166,14 +168,6 @@ const updatedCreditRequest = async (req, res) => {
     throw new Error("User Not Found");
   }
 
-  const updatedUser = await User.findByIdAndUpdate(
-  user._id,
-  {
-    credits: user.credits + creditRequest.credits,
-  },
-  { new: true }
-);
-
   const updatedCreditRequest = await Credit.findByIdAndUpdate(
     creditRequest._id,
     { status },
@@ -182,21 +176,43 @@ const updatedCreditRequest = async (req, res) => {
   res.status(200).json(updatedCreditRequest);
 };
 
+const getAllRoadsMap = async (req, res) => {
+  const roadmaps = await Roadmap.find().populate("user");
 
-const getAllRoadsMap = async(req,res) => {
+  if (!roadmaps) {
+    res.status(404);
+    throw new Error("Roadmap Not Found");
+  }
 
-const roadmaps =  await Roadmap.find().populate("user")
+  res.status(200).json(roadmaps);
+};
 
- if(!roadmaps){
+
+const updateUser = async(req ,res) => {
+
+const userId = req.params.uid
+
+const user = await User.findById(userId) 
+
+if(!user) {
   res.status(404)
-  throw new Error("Roadmap Not Found");
+  throw new Error("user Is Not Found")
+}
+
+const updatedUser = await User.findByIdAndUpdate(user._id , {isActive : !user.isActive} , {new  : true})
+
+if(!updatedUser){
+  res.status(409)
+  throw new Error("User Not Updated ");
   
+}
+res.status(200).json(updatedUser)
+ 
 
- }
-
- res.status(200).json(roadmaps)
 
 }
+
+
 
 const adminControllers = {
   getAllUser,
@@ -209,7 +225,8 @@ const adminControllers = {
   UpdateCounselor,
   getAllCreditsRequest,
   updatedCreditRequest,
-  getAllRoadsMap
+  getAllRoadsMap,
+  updateUser
 };
 
 export default adminControllers;
