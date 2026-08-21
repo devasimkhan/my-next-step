@@ -65,9 +65,20 @@ const getActiveCounselors = async(req ,res) => {
   
 }
 
+const getCategories = async(req, res) => {
+
+  const categories = await Category.find()
+  if(!categories){
+    res.status(404)
+    throw new Error("Categories is not Found");
+  }
+  res.status(200).json(categories)
+}
+
 const counselorControllers = {
   becomeACounselor,
-  getActiveCounselors
+  getActiveCounselors ,
+  getCategories
 };
 
 export default counselorControllers;
